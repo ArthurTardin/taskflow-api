@@ -1,0 +1,25 @@
+info:
+  name: Atualizar tarefa
+  type: http
+  seq: 1
+
+http:
+  method: PUT
+  url: http://localhost:3000/api/tarefas/1
+  body:
+    type: json
+    data: |-
+      {
+        "nome": "Estudar JavaScript e Node.js",
+        "descricao": "Praticar atualização de tarefas com Express",
+        "responsavel": "João",
+        "data_tarefa": "2026-10-22",
+        "concluido": true
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

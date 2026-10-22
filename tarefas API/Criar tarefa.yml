@@ -1,0 +1,25 @@
+info:
+  name: Criar tarefa
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:3000/api/tarefas
+  body:
+    type: json
+    data: |-
+      {
+        "nome": "Estudar JavaScript",
+        "descricao": "Aprender a testar APIs com Bruno",
+        "responsavel": "João",
+        "data_tarefa": "2026-10-22",
+        "concluido": false
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

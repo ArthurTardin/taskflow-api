@@ -1,0 +1,227 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Painel de gerenciamento de tarefas">
+    <title>TaskFlow | Gestão de tarefas</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/app.js" type="module"></script>
+</head>
+<body>
+    <div class="app-layout">
+        <aside class="sidebar">
+            <a href="#" class="brand">
+                <span class="brand-icon">T</span>
+                <span>TaskFlow</span>
+            </a>
+
+            <div class="sidebar-section">
+                <p class="sidebar-label">MENU PRINCIPAL</p>
+
+                <a href="#dashboard" class="nav-link active">
+                    <span class="nav-icon">▦</span>
+                    Dashboard
+                </a>
+
+                <a href="#tarefas" class="nav-link">
+                    <span class="nav-icon">☷</span>
+                    Tarefas
+                </a>
+
+                <a href="#cadastro" class="nav-link">
+                    <span class="nav-icon">＋</span>
+                    Nova tarefa
+                </a>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="profile-avatar">TF</div>
+                <div>
+                    <strong>Equipe</strong>
+                    <span>Gestão de tarefas</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div>
+                    <p class="eyebrow">ESPAÇO DE TRABALHO</p>
+                    <h1>Dashboard</h1>
+                </div>
+
+                <button id="nova-tarefa-btn" class="button button-primary">
+                    <span>＋</span> Nova tarefa
+                </button>
+            </header>
+
+            <section id="dashboard" class="welcome-section">
+                <div>
+                    <p class="eyebrow">VISÃO GERAL</p>
+                    <h2>Gerencie suas tarefas</h2>
+                    <p>Acompanhe atividades, responsáveis e prazos em um só lugar.</p>
+                </div>
+            </section>
+
+            <section class="stats-grid" aria-label="Resumo das tarefas">
+                <article class="stat-card">
+                    <div class="stat-heading">
+                        <span>Total de tarefas</span>
+                        <span class="stat-icon icon-purple">▤</span>
+                    </div>
+                    <strong id="total-tarefas" class="stat-value">—</strong>
+                    <span class="stat-description">No período selecionado</span>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-heading">
+                        <span>Pendentes</span>
+                        <span class="stat-icon icon-orange">◷</span>
+                    </div>
+                    <strong id="tarefas-pendentes" class="stat-value">—</strong>
+                    <span class="stat-description">Aguardando conclusão</span>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-heading">
+                        <span>Concluídas</span>
+                        <span class="stat-icon icon-green">✓</span>
+                    </div>
+                    <strong id="tarefas-concluidas" class="stat-value">—</strong>
+                    <span class="stat-description">Finalizadas no período</span>
+                </article>
+            </section>
+
+            <section id="cadastro" class="panel form-panel">
+                <div class="panel-header">
+                    <div>
+                        <h2 id="form-title">Cadastrar tarefa</h2>
+                        <p>Preencha os dados da atividade.</p>
+                    </div>
+                </div>
+
+                <form id="tarefa-form">
+                    <input type="hidden" id="tarefa-id">
+
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label for="nome">Nome da tarefa</label>
+                            <input
+                                id="nome"
+                                name="nome"
+                                type="text"
+                                maxlength="100"
+                                placeholder="Ex.: Organizar documentos"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-field">
+                            <label for="responsavel">Responsável</label>
+                            <input
+                                id="responsavel"
+                                name="responsavel"
+                                type="text"
+                                maxlength="100"
+                                placeholder="Nome do funcionário"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-field">
+                            <label for="data_tarefa">Data da tarefa</label>
+                            <input
+                                id="data_tarefa"
+                                name="data_tarefa"
+                                type="date"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-field">
+                            <label for="descricao">Descrição</label>
+                            <textarea
+                                id="descricao"
+                                name="descricao"
+                                rows="3"
+                                placeholder="Detalhes da atividade (opcional)"
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button
+                            type="button"
+                            id="cancelar-edicao-btn"
+                            class="button button-secondary hidden"
+                        >
+                            Cancelar edição
+                        </button>
+
+                        <button type="submit" class="button button-primary">
+                            Salvar tarefa
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <section id="tarefas" class="panel tasks-panel">
+                <div class="panel-header tasks-header">
+                    <div>
+                        <h2>Lista de tarefas</h2>
+                        <p>Consulte e gerencie as atividades cadastradas.</p>
+                    </div>
+
+                    <span id="contador-tarefas" class="task-counter">0 tarefas</span>
+                </div>
+
+                <form id="filtro-form" class="filter-bar">
+                    <div class="form-field">
+                        <label for="data-inicio">Data inicial</label>
+                        <input id="data-inicio" type="date" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="data-fim">Data final</label>
+                        <input id="data-fim" type="date" required>
+                    </div>
+
+                    <button type="submit" class="button button-secondary">
+                        Filtrar período
+                    </button>
+                </form>
+
+                <div id="mensagem" class="message hidden" role="status"></div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tarefa</th>
+                                <th>Responsável</th>
+                                <th>Data</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tarefas-tbody">
+                            <tr>
+                                <td colspan="5" class="empty-state">
+                                    Carregando tarefas...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <footer class="page-footer">
+                TaskFlow · Sistema de gerenciamento de tarefas
+            </footer>
+        </main>
+    </div>
+</body>
+</html>
