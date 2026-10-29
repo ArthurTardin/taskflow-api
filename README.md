@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Status-Em%20desenvolvimento-yellow" alt="Status: Em desenvolvimento">
+  <img src="https://img.shields.io/badge/Status-Conclu%C3%ADda-brightgreen" alt="Status: Concluída">
   <img src="https://img.shields.io/badge/Node.js-Backend-green?logo=node.js" alt="Node.js">
   <img src="https://img.shields.io/badge/Express-API-black?logo=express" alt="Express">
   <img src="https://img.shields.io/badge/MariaDB-Database-blue?logo=mariadb" alt="MariaDB">
