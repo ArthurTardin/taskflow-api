@@ -10,13 +10,19 @@ export async function criarTarefa(req, res) {
             concluido
         } = req.body;
 
+        if (!nome || !responsavel || !data_tarefa) {
+            return res.status(400).json({
+                mensagem: 'Campos obrigatórios (nome, responsável, data_tarefa) não foram informados.'
+            });
+        }
+
         const [resultado] = await pool.execute(
             `INSERT INTO tarefas
             (nome, descricao, responsavel, data_tarefa, concluido)
             VALUES (?, ?, ?, ?, ?)`,
             [
                 nome,
-                descricao,
+                descricao ?? null,
                 responsavel,
                 data_tarefa,
                 concluido ?? false
@@ -26,13 +32,13 @@ export async function criarTarefa(req, res) {
         return res.status(201).json({
             id: resultado.insertId,
             nome,
-            descricao,
+            descricao: descricao ?? null,
             responsavel,
             data_tarefa,
             concluido: concluido ?? false
         });
     } catch (error) {
-        console.error(error);
+        console.error('Erro em criarTarefa:', error);
 
         return res.status(500).json({
             mensagem: 'Erro ao criar tarefa.'
@@ -56,9 +62,9 @@ export async function buscarTarefaPorId(req, res) {
 
         return res.status(200).json(tarefas[0]);
     } catch (error) {
-        console.log(error);
+        console.error('Erro em  buscarTarefaPorId:', error);
 
-        res.status(500).json({
+        return res.status(500).json({
             mensagem: 'Erro ao buscar tarefa.'
         });
     }
@@ -74,7 +80,16 @@ export async function listarTarefasPorPeriodo(req, res) {
             });
         }
 
-        if (dataInicio > dataFim) {
+        const inicio = new Date(dataInicio);
+        const fim = new Date(dataFim);
+
+        if (isNaN(inicio.getTime()) || isNaN(fim.getTime())) {
+            return res.status(400).json({
+                mensagem: 'Formato de data inválido.'
+            });
+        }
+
+        if (inicio > fim) {
             return res.status(400).json({
                 mensagem: 'A data inicial não pode ser posterior à data final.'
             });
@@ -84,7 +99,7 @@ export async function listarTarefasPorPeriodo(req, res) {
 
         return res.status(200).json(tarefas);
     } catch(error) {
-        console.log(error);
+        console.error('Erro em listarTarefaPorPeriodo:', error);
 
         return res.status(500).json({
             mensagem: 'Erro ao listar tarefas por período.'
@@ -121,27 +136,22 @@ export async function atualizarTarefa(req, res) {
                 descricao = ?,
                 responsavel = ?,
                 data_tarefa = ?,
-                concluido = ?`,
-                [nome, descricao, responsavel, data_tarefa, concluido]
+                concluido = ?
+            WHERE id = ?`,
+                [nome, descricao, responsavel, data_tarefa, concluido, id]
         );
 
         if (resultado.affectedRows === 0) {
-            const [tarefas] = await pool.execute(
-                'SELECT id FROM tarefas WHERE id = ?', [id]
-            );
-
-            if (tarefas.length === 0) {
-                return res.status(400).json({
-                    mensagem: 'Tarefa não encontada.'
-                });
-            }
+            return res.status(404).json({
+                mensagem: 'Tarefa não encontrada.'
+            });
         }
 
         return res.status(200).json({
             mensagem: 'Tarefa atualizada com sucesso.'
         });
     }catch(error) {
-        console.log(error);
+        console.error('Erro em atualizarTarefa:', error);
 
         return res.status(500).json({
             mensagem: 'Erro ao atualizar tarefa.'
@@ -165,8 +175,8 @@ export async function excluirTarefa(req, res) {
             mensagem: 'Tarefa excluída com sucesso.'
         });
     }catch(error) {
-        console.log(error);
-        res.status(500).json({
+        console.error('Erro em excluirTarefa', error);
+        return res.status(500).json({
             mensagem: 'Erro ao excluir a tarefa.'
         });
     }
